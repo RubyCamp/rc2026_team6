@@ -1,6 +1,7 @@
-<h1>Availabilities#index</h1>
+<h1>シフト管理表</h1>
 <ul>
 <% @availabilities.each do |availability| %>
-  <li><%= availability.staff_member.name %> <%= availability.starts_at.strftime("%I:%M %p") %></li>
+  <li><%= availability.starts_at.strftime("%Y-%m-%d") %> </li>
+  <li><%= availability.staff_member.name %> <%= availability.starts_at.strftime("%I:%M %p") %> - <%= availability.ends_at.strftime("%I:%M %p") %></li>
 <% end %>
 </ul>
