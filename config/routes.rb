@@ -15,7 +15,7 @@ Rails.application.routes.draw do
     # Defines the root path route ("/")
     # root "posts#index"
     root "work_requests#index"
-
+    get "/availabilities", to: "availabilities#index", as: :availabilities
   resources :work_requests, only: %i[index show edit update]
   resources :staff_members, only: [ :index ]
   get "examples/local-data",
