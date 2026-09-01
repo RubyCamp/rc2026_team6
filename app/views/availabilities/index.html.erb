@@ -1,0 +1,6 @@
+<h1>Availabilities#index</h1>
+<ul>
+<% @availabilities.each do |availability| %>
+  <li><%= availability.staff_member.name %> <%= availability.starts_at.strftime("%I:%M %p") %></li>
+<% end %>
+</ul>
