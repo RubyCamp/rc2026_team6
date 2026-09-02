@@ -19,6 +19,23 @@ class AvailabilitiesController < ApplicationController
     end
   end
 
+  def edit
+    @availability = Availability.find(params[:id])
+    @staff_members = StaffMember.all
+  end
+
+  def update
+    logger.debug "Availability params: #{availability_params.inspect}"
+    logger.debug("Updating availability: #{params[:id]}")
+    @availability = Availability.find(params[:id])
+    @staff_members = StaffMember.all
+    if @availability.update(availability_params)
+      redirect_to availabilities_path
+    else
+      render :edit, status: :unprocessable_entity
+    end
+  end
+
   private
   def availability_params
     params.require(:availability).permit(:staff_member_id, :starts_at, :ends_at, :notes)
