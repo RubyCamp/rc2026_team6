@@ -1,7 +1,28 @@
 <h1>シフト管理表</h1>
 <ul>
-<% @availabilities.each do |availability| %>
-  <li><%= availability.starts_at.strftime("%Y-%m-%d") %> </li>
-  <li><%= availability.staff_member.name %> <%= availability.starts_at.strftime("%I:%M %p") %> - <%= availability.ends_at.strftime("%I:%M %p") %></li>
-<% end %>
+<table>
+  <thead>
+    <tr>
+      <th>日付</th>
+      <th>スタッフ名</th>
+      <th>希望時間帯</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @availabilities.each do |availability| %>
+      <tr>
+
+        <td><%= availability.starts_at.strftime("%Y-%m-%d") %></td>
+        <td><%= availability.staff_member.name %></td>
+        <td><%= time_label(availability.starts_at) %> <td><%= time_label(availability.ends_at) %></td>
+</td><td><%=availability.starts_at.strftime("%H:%M") %> - <%= availability.ends_at.strftime("%H:%M") %></td>
+
+
+      </tr>
+    <% end %>
+  </tbody>
+  </table>
+
+
+
 </ul>
