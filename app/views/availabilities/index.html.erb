@@ -24,6 +24,7 @@
             <th scope="col">スタッフ名</th>
             <th scope="col">時間帯</th>
             <th scope="col">具体的時間</th>
+            <th scope="col">操作</th>
           </tr>
         </thead>
         <tbody>
@@ -37,6 +38,18 @@
                 </span>
               </td>
               <td><%= availability.starts_at.strftime("%H:%M") %> 〜 <%= availability.ends_at.strftime("%H:%M") %></td>
+              <td>
+                <%= link_to "更新", edit_availability_path(availability), class: "btn btn-sm btn-outline-primary" %>
+                <%= button_to "削除",
+                              availability_path(availability),
+                              method: :delete,
+                              class: "btn btn-sm btn-outline-danger",
+                              form: {
+                                data: {
+                                  turbo_confirm: "このシフト希望を削除しますか？"
+                                }
+                              } %>
+              </td>
             </tr>
           <% end %>
         </tbody>

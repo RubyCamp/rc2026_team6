@@ -75,23 +75,32 @@ staff = {
 end
 
 available_from = Time.zone.local(2026, 8, 20, 9)
-available_until = Time.zone.local(2026, 8, 20, 18)
+availabilities = {}
 
-availabilities = staff.to_h do |key, staff_member|
-  status =
-    staff_member == staff[:unavailable] ? :unavailable : :available
+Availability.where(staff_member: staff.values)
+            .where("starts_at >= ?", available_from + 10.days)
+            .delete_all
 
-  availability = upsert_by(
-    Availability,
-    {
-      staff_member: staff_member,
-      starts_at: available_from
-    },
-    ends_at: available_until,
-    status: status
-  )
+10.times do |day_offset|
+  starts_at = available_from + day_offset.days
+  ends_at = starts_at + 9.hours
 
-  [ key, availability ]
+  staff.each do |key, staff_member|
+    status =
+      staff_member == staff[:unavailable] ? :unavailable : :available
+
+    availability = upsert_by(
+      Availability,
+      {
+        staff_member: staff_member,
+        starts_at: starts_at
+      },
+      ends_at: ends_at,
+      status: status
+    )
+
+    availabilities[key] ||= availability
+  end
 end
 
 def upsert_work_request(
@@ -247,6 +256,7 @@ end
 puts(
   "基準データを投入しました" \
   "（スタッフ#{StaffMember.count}名、" \
+  "勤務希望#{Availability.count}件、" \
   "依頼#{WorkRequest.count}件、" \
   "変更記録#{ChangeEvent.count}件）"
 )

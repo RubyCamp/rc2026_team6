@@ -3,7 +3,9 @@
     <%= f.select :staff_member_id, @staff_members.order(:name).map { |s| [s.name, s.id] } %><br>
   </div>
   <div>
-    <%= f.date_field :starts_at %>
+    <%= f.date_field :starts_at,
+                     min: Date.current,
+                     max: Date.current + 364.days %>
   </div>
   <!-- <div> -->
     <%#= f.collection_check_boxes nil, :time_sections,@time_sections.keys, @time_sections do |t| %>
