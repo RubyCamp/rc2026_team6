@@ -1,8 +1,10 @@
 <%= form_with model: @availability do |f| %>
   <div>
+    <%= f.label :staff_member_id, "スタッフ名:" %>
     <%= f.select :staff_member_id, @staff_members.order(:name).map { |s| [s.name, s.id] } %><br>
   </div>
   <div>
+    <%= f.label :starts_at, "日付:" %>
     <%= f.date_field :starts_at %>
   </div>
   <!-- <div> -->
@@ -11,10 +13,13 @@
     <%# end %>
   <!-- </div> -->
   <div>
+    <%= f.label :starts_at, "勤務時間:" %>
     <%= f.time_field :starts_at %>
+    <%= f.label :ends_at, "～" %>
     <%= f.time_field :ends_at %>
   </div>
   <div>
+    <%= f.label :submit, "送信:" %>
     <%= f.submit %>
   </div>
 <% end %>
