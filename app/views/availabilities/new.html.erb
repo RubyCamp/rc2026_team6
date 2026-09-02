@@ -1,0 +1,22 @@
+<h1>New Availability</h1>
+
+<%= form_with model: @availability do |f| %>
+  <div>
+    <%= f.select :staff_member_id, @staff_members.order(:name).map { |s| [s.name, s.id] } %><br>
+  </div>
+  <div>
+    <%= f.date_field :starts_at %>
+  </div>
+  <!-- <div> -->
+    <%#= f.collection_check_boxes nil, :time_sections,@time_sections.keys, @time_sections do |t| %>
+      <!-- <%#= t.label { t.check_box + t.text } %><br> -->
+    <%# end %>
+  <!-- </div> -->
+  <div>
+    <%= f.time_field :starts_at %>
+    <%= f.time_field :ends_at %>
+  </div>
+  <div>
+    <%= f.submit %>
+  </div>
+<% end %>
