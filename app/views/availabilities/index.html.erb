@@ -1,25 +1,51 @@
-<h1>シフト管理表</h1>
-<ul>
-<table>
-  <thead>
-    <tr>
-      <th>日付</th>
-      <th>スタッフ名</th>
-      <th>希望時間帯</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @availabilities.each do |availability| %>
-      <tr>
+<% content_for :title, "シフト管理表" %>
 
-        <td><%= availability.starts_at.strftime("%Y-%m-%d") %></td>
-        <td><%= availability.staff_member.name %></td>
-        <td><%= time_label(availability.starts_at) %> - <%= time_label(availability.ends_at) %></td>
-        <td><%=availability.starts_at.strftime("%H:%M") %> - <%= availability.ends_at.strftime("%H:%M") %></td>
+<div class="mb-4">
+  <p class="mb-1 text-primary fw-semibold">
+    勤務管理
+  </p>
 
-      </tr>
-    <% end %>
-  </tbody>
-  </table>
+  <h1 class="display-6 fw-bold">
+    シフト管理表
+  </h1>
 
-</ul>
+  <p class="page-lead text-body-secondary">
+    スタッフの希望時間帯と勤務予定を確認できます。
+  </p>
+</div>
+
+<% if @availabilities.any? %>
+  <div class="card shadow-sm">
+    <div class="table-responsive">
+      <table class="table table-hover mb-0">
+        <thead class="table-light">
+          <tr>
+            <th scope="col">日付</th>
+            <th scope="col">スタッフ名</th>
+            <th scope="col">時間帯</th>
+            <th scope="col">具体的時間</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @availabilities.each do |availability| %>
+            <tr>
+              <td><%= availability.starts_at.strftime("%Y-%m-%d") %></td>
+              <td><%= availability.staff_member.name %></td>
+              <td>
+                <span class="badge text-bg-secondary">
+                  <%= time_label(availability.starts_at, availability.ends_at) %>
+                </span>
+              </td>
+              <td><%= availability.starts_at.strftime("%H:%M") %> 〜 <%= availability.ends_at.strftime("%H:%M") %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+<% else %>
+  <div class="alert alert-info" role="status">
+    シフト希望はまだ登録されていません。
+  </div>
+<% end %>
+
