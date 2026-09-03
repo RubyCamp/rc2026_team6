@@ -1,3 +1,4 @@
+
 class StaffMember < ApplicationRecord
   has_many :availabilities, dependent: :destroy
   has_many :assignments, dependent: :restrict_with_error
