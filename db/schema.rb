@@ -10,8 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_03_172749) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_03_001000) do
   # These are extensions that must be enabled in order to support this database
+  enable_extension "btree_gist"
   enable_extension "pg_catalog.plpgsql"
 
   create_table "assignments", force: :cascade do |t|
@@ -40,6 +41,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_03_172749) do
     t.index ["staff_member_id"], name: "index_availabilities_on_staff_member_id"
     t.check_constraint "ends_at > starts_at", name: "availabilities_time_range_check"
     t.check_constraint "status::text = ANY (ARRAY['available'::character varying::text, 'unavailable'::character varying::text])", name: "availabilities_status_check"
+    t.exclusion_constraint "staff_member_id WITH =, tsrange(starts_at, ends_at, '[)'::text) WITH &&", using: :gist, name: "availabilities_no_overlapping_staff_shifts"
   end
 
   create_table "businesses", force: :cascade do |t|
