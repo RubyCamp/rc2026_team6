@@ -1,38 +1,74 @@
+<!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
 <%= form_with model: @availability do |f| %>
-  <% if @availability.errors.any? %>
-    <div class="alert alert-danger" role="alert">
-      <ul class="mb-0">
-        <% @availability.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
+  <div class="mb-4">
+    <%= f.label :staff_member_id, "スタッフ名" %>
+    <%= f.select :staff_member_id, @staff_members.order(:name).map { |s| [s.name, s.id] }, {},{class:"form-select"} %>
+  </div>
+  <div class="mb-3">
+    <%= f.label :starts_at, "日付" %>
+    <%= f.date_field :starts_at, {class:"form-control"} %>
+  </div>
+  <div class="mb-3">
+    <%= f.label :status, "参加可否:" %><br>
+    <%= f.radio_button :status, :available, id: "status-available", class: "availability-radio" %>
+    <%= f.label :status_available, "可能", {class:"form-check-label"} %>
+    <%= f.radio_button :status, :unavailable, id: "status-unavailable", class: "availability-radio" %>
+    <%= f.label :status_unavailable, "休み", {class:"form-check-label"} %>
+  </div>
 
-  <div>
-    <%= f.select :staff_member_id, @staff_members.order(:name).map { |s| [s.name, s.id] } %><br>
-  </div>
-  <div>
-    <%= f.date_field :work_date,
-                     value: @availability.starts_at&.to_date,
-                     name: "availability[work_date]",
-                     min: Date.current,
-                     max: Date.current + 364.days %>
-  </div>
   <!-- <div> -->
     <%#= f.collection_check_boxes nil, :time_sections,@time_sections.keys, @time_sections do |t| %>
       <!-- <%#= t.label { t.check_box + t.text } %><br> -->
     <%# end %>
   <!-- </div> -->
-  <div>
-    <%= f.time_field :starts_time,
-                     value: @availability.starts_at&.strftime("%H:%M"),
-                     name: "availability[starts_time]" %>
-    <%= f.time_field :ends_time,
-                     value: @availability.ends_at&.strftime("%H:%M"),
-                     name: "availability[ends_time]" %>
+  <div id="available-fields" class="mb-4 row g-4">
+    <%# if @availability.status == :available %>
+      <%= f.label :starts_at, "勤務時間:" %>
+      <div class="col-12 d-flex align-items-center flex-wrap gap-2">
+        <%= f.time_field :starts_at, {class:"form-control col-4", style: "width: auto;" } %>
+        <span class="mx-2">〜</span>
+        <%= f.time_field :ends_at, {class:"form-control col-4", style: "width: auto;" } %>
+      </div>
+    <%# end %>
   </div>
-  <div>
-    <%= f.submit %>
+  <div id="unavailable-fields" class="mb-4" style="display: none;">
+    <%= f.label :reason, "休み理由:" %><br>
+    <%= f.radio_button :unavailable_reason, :public_holiday, {class:"form-check-input"} %>
+    <%= f.label :public_holiday, "公休", {class:"form-check-label"} %>
+    <%= f.radio_button :unavailable_reason, :requested_leave, {class:"form-check-input"} %>
+    <%= f.label :requested_leave, "希望休", {class:"form-check-label"} %>
+  </div>
+  <div class="mb-4">
+    <%= f.label :notes, "備考:" %>
+    <%= f.text_area :notes, rows: 4, class: "form-control" %>
+  </div>
+  <div class="mb-4">
+    <%= f.submit "送信", class: "btn btn-outline-primary btn-lg" %>
   </div>
 <% end %>
+
+<script>
+  document.addEventListener("turbo:load", () => {
+    const radios = document.querySelectorAll(".availability-radio");
+    const availableFields = document.getElementById("available-fields");
+    const unavailableFields = document.getElementById("unavailable-fields");
+
+    function toggleFields() {
+      const selected = document.querySelector(".availability-radio:checked");
+      if (selected && selected.value === "available") {
+        availableFields.style.display = "block";
+        unavailableFields.style.display = "none";
+      } else {
+        availableFields.style.display = "none";
+        unavailableFields.style.display = "block";
+      }
+    }
+
+    radios.forEach(radio => {
+      radio.addEventListener("change", toggleFields);
+    });
+
+    // 画面ロード時（バリデーションエラー時など）の状態復元
+    toggleFields();
+  });
+</script>
