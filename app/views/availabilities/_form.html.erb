@@ -1,24 +1,39 @@
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <%= form_with model: @availability do |f| %>
-  <div>
+  <div class="mb-3">
     <%= f.label :staff_member_id, "スタッフ名:" %>
     <%= f.select :staff_member_id, @staff_members.order(:name).map { |s| [s.name, s.id] } %><br>
   </div>
-  <div>
+  <div class="mb-3">
     <%= f.label :starts_at, "日付:" %>
     <%= f.date_field :starts_at %>
   </div>
+  <div class="mb-3">
+    <%= f.label :status, "参加可否:" %><br>
+    <%= f.radio_button :status, :available %>
+    <%= f.label :status_available, "可能" %>
+    <%= f.radio_button :status, :unavailable %>
+    <%= f.label :status_unavailable, "休み" %>
+  </div>
+
   <!-- <div> -->
     <%#= f.collection_check_boxes nil, :time_sections,@time_sections.keys, @time_sections do |t| %>
       <!-- <%#= t.label { t.check_box + t.text } %><br> -->
     <%# end %>
   <!-- </div> -->
-  <div>
-    <%= f.label :starts_at, "勤務時間:" %>
-    <%= f.time_field :starts_at %>
-    <%= f.label :ends_at, "～" %>
-    <%= f.time_field :ends_at %>
+  <div class="mb-3">
+    <%# if @availability.status == :available %>
+      <%= f.label :starts_at, "勤務時間:" %>
+      <%= f.time_field :starts_at %>
+      <%= f.label :ends_at, "～" %>
+      <%= f.time_field :ends_at %>
+    <%# end %>
   </div>
-  <div>
+  <div class="mb-3">
+    <%= f.label :notes, "備考:" %>
+    <%= f.text_area :notes, rows: 4 %>
+  </div>
+  <div class="btn btn-primary">
     <%= f.label :submit, "送信:" %>
     <%= f.submit %>
   </div>
