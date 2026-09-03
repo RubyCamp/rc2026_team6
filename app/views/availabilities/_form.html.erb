@@ -1,9 +1,21 @@
 <%= form_with model: @availability do |f| %>
+  <% if @availability.errors.any? %>
+    <div class="alert alert-danger" role="alert">
+      <ul class="mb-0">
+        <% @availability.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
   <div>
     <%= f.select :staff_member_id, @staff_members.order(:name).map { |s| [s.name, s.id] } %><br>
   </div>
   <div>
-    <%= f.date_field :starts_at,
+    <%= f.date_field :work_date,
+                     value: @availability.starts_at&.to_date,
+                     name: "availability[work_date]",
                      min: Date.current,
                      max: Date.current + 364.days %>
   </div>
@@ -13,8 +25,12 @@
     <%# end %>
   <!-- </div> -->
   <div>
-    <%= f.time_field :starts_at %>
-    <%= f.time_field :ends_at %>
+    <%= f.time_field :starts_time,
+                     value: @availability.starts_at&.strftime("%H:%M"),
+                     name: "availability[starts_time]" %>
+    <%= f.time_field :ends_time,
+                     value: @availability.ends_at&.strftime("%H:%M"),
+                     name: "availability[ends_time]" %>
   </div>
   <div>
     <%= f.submit %>

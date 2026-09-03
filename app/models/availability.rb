@@ -4,6 +4,7 @@ class Availability < ApplicationRecord
   enum :status, { available: "available", unavailable: "unavailable" }, validate: true
 
   validates :starts_at, :ends_at, presence: true
+  validate :overlapping_shift_for_staff_member
   validate :ends_at_after_starts_at
 
   def self.for_staff(staff_member_id:)
@@ -57,6 +58,18 @@ def self.remove!(id:)
 end
 
   private
+
+  def overlapping_shift_for_staff_member
+    return if staff_member_id.blank? || starts_at.blank?
+
+    duplicate_exists = self.class
+      .where(staff_member_id: staff_member_id)
+      .where("starts_at < ? AND ends_at > ?", ends_at, starts_at)
+      .where.not(id: id)
+      .exists?
+
+    errors.add(:starts_at, "は同じスタッフの同じ時間帯に登録できません") if duplicate_exists
+  end
 
   def ends_at_after_starts_at
     return if starts_at.blank? || ends_at.blank? || ends_at > starts_at

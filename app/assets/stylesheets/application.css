@@ -46,3 +46,120 @@ body {
   margin: 0;
   text-align: right;
 }
+
+.calendar-shell {
+  overflow: hidden;
+  border: var(--bs-border-width) solid var(--bs-border-color);
+  border-radius: var(--bs-border-radius);
+  background: var(--bs-body-bg);
+}
+
+.calendar-table {
+  width: 100%;
+  min-width: 52rem;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+
+.calendar-table th {
+  padding: 0.75rem;
+  border-bottom: var(--bs-border-width) solid var(--bs-border-color);
+  background: var(--bs-tertiary-bg);
+  text-align: center;
+  font-size: 0.875rem;
+}
+
+.calendar-table th:first-child {
+  color: var(--bs-danger) !important;
+}
+
+.calendar-table th:last-child {
+  color: var(--bs-primary) !important;
+}
+
+.calendar-day {
+  height: 8.75rem;
+  padding: 0.5rem;
+  vertical-align: top;
+  border-right: var(--bs-border-width) solid var(--bs-border-color);
+  border-bottom: var(--bs-border-width) solid var(--bs-border-color);
+}
+
+.calendar-table tr > *:last-child {
+  border-right: 0;
+}
+
+.calendar-table tbody tr:last-child .calendar-day {
+  border-bottom: 0;
+}
+
+.calendar-day-muted {
+  background: var(--bs-tertiary-bg);
+  color: var(--bs-secondary-color);
+}
+
+.calendar-day-today {
+  background: rgba(var(--bs-primary-rgb), 0.08);
+  box-shadow: inset 0.2rem 0 0 var(--bs-primary);
+}
+
+.calendar-date {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.4rem;
+  font-weight: 600;
+  cursor: pointer;
+  list-style: none;
+}
+
+.calendar-date::-webkit-details-marker {
+  display: none;
+}
+
+.calendar-date::after {
+  content: "+";
+  color: var(--bs-secondary-color);
+  font-size: 1.1rem;
+  font-weight: 400;
+}
+
+.calendar-details[open] .calendar-date::after {
+  content: "−";
+}
+
+.calendar-entries {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.calendar-entry {
+  padding: 0.4rem 0.5rem;
+  overflow: hidden;
+  border-left: 0.2rem solid var(--bs-primary);
+  border-radius: var(--bs-border-radius-sm);
+  background: var(--bs-primary-bg-subtle);
+  font-size: 0.8125rem;
+}
+
+.calendar-entry-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.2rem;
+  font-size: 0.75rem;
+}
+
+.calendar-entry-actions form {
+  display: inline;
+}
+
+@media (max-width: 767.98px) {
+  .calendar-toolbar h2 {
+    font-size: 1.25rem;
+  }
+
+  .calendar-table th,
+  .calendar-day {
+    padding: 0.4rem;
+  }
+}
