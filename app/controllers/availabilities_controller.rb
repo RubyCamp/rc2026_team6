@@ -36,6 +36,11 @@ class AvailabilitiesController < ApplicationController
     end
   end
 
+  def destroy
+    Availability.remove!(id: params[:id])
+    redirect_to availabilities_path
+  end
+
   private
   def availability_params
     params.require(:availability).permit(:staff_member_id, :starts_at, :ends_at, :notes)
