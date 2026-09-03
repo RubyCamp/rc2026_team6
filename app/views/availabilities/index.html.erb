@@ -49,17 +49,23 @@
                 <details class="calendar-details">
                   <summary class="calendar-date">
                     <span><%= day.day %></span>
-                    <% if day_entries.any? %>
-                      <span class="badge rounded-pill text-bg-primary"><%= day_entries.size %></span>
-                    <% end %>
+                    <span class="d-flex align-items-center gap-2">
+                      <% if day_entries.any? %>
+                        <span class="badge rounded-pill text-bg-primary"><%= day_entries.size %></span>
+                      <% end %>
+                    </span>
                   </summary>
                   <div class="calendar-entries">
                     <% if day_entries.any? %>
                       <% day_entries.each do |availability| %>
                         <div class="calendar-entry">
                           <div class="fw-semibold text-truncate"><%= availability.staff_member.name %></div>
-                          <div class="small text-body-secondary"><%= availability.starts_at.strftime("%H:%M") %> 〜 <%= availability.ends_at.strftime("%H:%M") %></div>
-                          <div class="small text-primary"><%= time_label(availability.starts_at, availability.ends_at) %></div>
+                          <% if availability.available? %>
+                            <div class="small text-body-secondary"><%= availability.starts_at.strftime("%H:%M") %> 〜 <%= availability.ends_at.strftime("%H:%M") %></div>
+                            <div class="small text-primary"><%= time_label(availability.starts_at, availability.ends_at) %></div>
+                          <% else %>
+                            <div class="availability-requested-holiday">希望休</div>
+                          <% end %>
                           <div class="calendar-entry-actions">
                             <%= link_to "更新", edit_availability_path(availability), class: "link-primary" %>
                             <%= button_to "削除", availability_path(availability), method: :delete, class: "btn btn-link link-danger p-0", form: { data: { turbo_confirm: "このシフト希望を削除しますか？" } } %>
@@ -100,8 +106,12 @@
             <% staff_entries.each do |availability| %>
               <div class="staff-monthly-entry">
                 <span class="fw-semibold"><%= availability.starts_at.strftime("%-m/%-d") %></span>
-                <span><%= availability.starts_at.strftime("%H:%M") %>〜<%= availability.ends_at.strftime("%H:%M") %></span>
-                <span class="text-primary"><%= time_label(availability.starts_at, availability.ends_at) %></span>
+                <% if availability.available? %>
+                  <span><%= availability.starts_at.strftime("%H:%M") %>〜<%= availability.ends_at.strftime("%H:%M") %></span>
+                  <span class="text-primary"><%= time_label(availability.starts_at, availability.ends_at) %></span>
+                <% else %>
+                  <span class="availability-requested-holiday">希望休</span>
+                <% end %>
                 <%= link_to "更新", edit_availability_path(availability), class: "link-primary" %>
               </div>
             <% end %>
