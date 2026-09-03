@@ -1,6 +1,14 @@
 class AvailabilitiesController < ApplicationController
   def index
-    @availabilities = Availability.all
+    require Rails.root.join("staff_member") unless defined?(StaffMember)
+    @current_month = requested_month
+    @calendar_start = @current_month.beginning_of_month - @current_month.beginning_of_month.wday.days
+    calendar_end = @calendar_start + 42.days
+    @calendar_days = (@calendar_start...calendar_end).to_a
+    @availabilities_by_date = Availability.includes(:staff_member)
+      .where(starts_at: @calendar_start...calendar_end)
+      .order(:starts_at)
+      .group_by { |availability| availability.starts_at.to_date }
   end
 
   def new
@@ -42,7 +50,28 @@ class AvailabilitiesController < ApplicationController
   end
 
   private
+
+  def requested_month
+    Date.strptime(params[:month].to_s, "%Y-%m").beginning_of_month
+  rescue Date::Error
+    Date.current.beginning_of_month
+  end
+
   def availability_params
-    params.require(:availability).permit(:staff_member_id, :starts_at, :ends_at, :notes)
+    attributes = params.require(:availability).permit(
+      :staff_member_id,
+      :work_date,
+      :starts_time,
+      :ends_time,
+      :notes
+    )
+
+    work_date = Date.iso8601(attributes.delete(:work_date).to_s)
+    starts_time = Time.zone.parse("#{work_date} #{attributes.delete(:starts_time)}")
+    ends_time = Time.zone.parse("#{work_date} #{attributes.delete(:ends_time)}")
+
+    attributes.merge(starts_at: starts_time, ends_at: ends_time)
+  rescue ArgumentError, TypeError
+    attributes
   end
 end
