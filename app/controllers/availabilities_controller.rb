@@ -69,16 +69,17 @@ class AvailabilitiesController < ApplicationController
     attributes = params.require(:availability).permit(
       :staff_member_id,
       :work_date,
-      :starts_time,
-      :ends_time,
+      :starts_at,
+      :ends_at,
+      :status,
       :notes
     )
 
     work_date = Date.iso8601(attributes.delete(:work_date).to_s)
-    starts_time = Time.zone.parse("#{work_date} #{attributes.delete(:starts_time)}")
-    ends_time = Time.zone.parse("#{work_date} #{attributes.delete(:ends_time)}")
-
-    attributes.merge(starts_at: starts_time, ends_at: ends_time)
+    starts_at = Time.zone.parse("#{work_date} #{attributes.delete(:starts_at)}")
+    ends_at = Time.zone.parse("#{work_date} #{attributes.delete(:ends_at)}")
+    puts ends_at
+    attributes.merge(starts_at: starts_at, ends_at: ends_at)
   rescue ArgumentError, TypeError
     attributes
   end

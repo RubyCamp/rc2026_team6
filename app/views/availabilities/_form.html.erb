@@ -5,8 +5,9 @@
     <%= f.select :staff_member_id, @staff_members.order(:name).map { |s| [s.name, s.id] }, {},{class:"form-select"} %>
   </div>
   <div class="mb-3">
-    <%= f.label :starts_at, "日付" %>
-    <%= f.date_field :starts_at, {class:"form-control"} %>
+    <%= f.label :work_date, "日付" %>
+    <%= f.date_field :work_date, {class:"form-control"} %>
+    <%= @availability.errors %>
   </div>
   <div class="mb-3">
     <%= f.label :status, "参加可否:" %><br>
@@ -31,13 +32,13 @@
       </div>
     <%# end %>
   </div>
-  <div id="unavailable-fields" class="mb-4" style="display: none;">
-    <%= f.label :reason, "休み理由:" %><br>
-    <%= f.radio_button :unavailable_reason, :public_holiday, {class:"form-check-input"} %>
-    <%= f.label :public_holiday, "公休", {class:"form-check-label"} %>
-    <%= f.radio_button :unavailable_reason, :requested_leave, {class:"form-check-input"} %>
-    <%= f.label :requested_leave, "希望休", {class:"form-check-label"} %>
-  </div>
+  <!-- <div id="unavailable-fields" class="mb-4" style="display: none;"> -->
+    <%#= f.label :reason, "休み理由:" %><br>
+    <%#= f.radio_button :notes, :public_holiday, {class:"form-check-input"} %>
+    <%#= f.label :public_holiday, "公休", {class:"form-check-label"} %>
+    <%#= f.radio_button :notes, :requested_leave, {class:"form-check-input"} %>
+    <%#= f.label :requested_leave, "希望休", {class:"form-check-label"} %>
+  <!-- </div> -->
   <div class="mb-4">
     <%= f.label :notes, "備考:" %>
     <%= f.text_area :notes, rows: 4, class: "form-control" %>
