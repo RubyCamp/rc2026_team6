@@ -54,6 +54,10 @@ body {
   background: var(--bs-body-bg);
 }
 
+.availability-filter {
+  max-width: 48rem;
+}
+
 .calendar-table {
   width: 100%;
   min-width: 52rem;
@@ -153,6 +157,43 @@ body {
   display: inline;
 }
 
+.staff-monthly-list {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.staff-monthly-row {
+  display: grid;
+  grid-template-columns: minmax(9rem, 15rem) 1fr;
+  gap: 1rem;
+  padding: 1rem;
+  border: var(--bs-border-width) solid var(--bs-border-color);
+  border-radius: var(--bs-border-radius);
+  background: var(--bs-body-bg);
+}
+
+.staff-monthly-name {
+  padding-right: 1rem;
+  border-right: var(--bs-border-width) solid var(--bs-border-color);
+}
+
+.staff-monthly-entries {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.staff-monthly-entry {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.6rem;
+  border-radius: var(--bs-border-radius-sm);
+  background: var(--bs-tertiary-bg);
+  font-size: 0.875rem;
+}
+
 @media (max-width: 767.98px) {
   .calendar-toolbar h2 {
     font-size: 1.25rem;
@@ -161,5 +202,17 @@ body {
   .calendar-table th,
   .calendar-day {
     padding: 0.4rem;
+  }
+
+  .staff-monthly-row {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .staff-monthly-name {
+    padding-right: 0;
+    padding-bottom: 0.5rem;
+    border-right: 0;
+    border-bottom: var(--bs-border-width) solid var(--bs-border-color);
   }
 }

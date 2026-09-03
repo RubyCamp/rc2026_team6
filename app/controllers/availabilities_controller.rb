@@ -2,13 +2,21 @@ class AvailabilitiesController < ApplicationController
   def index
     require Rails.root.join("staff_member") unless defined?(StaffMember)
     @current_month = requested_month
+    @staff_member_id = params[:staff_member_id].presence
     @calendar_start = @current_month.beginning_of_month - @current_month.beginning_of_month.wday.days
     calendar_end = @calendar_start + 42.days
     @calendar_days = (@calendar_start...calendar_end).to_a
-    @availabilities_by_date = Availability.includes(:staff_member)
+    availabilities = Availability.includes(:staff_member)
       .where(starts_at: @calendar_start...calendar_end)
       .order(:starts_at)
-      .group_by { |availability| availability.starts_at.to_date }
+    availabilities = availabilities.where(staff_member_id: @staff_member_id) if @staff_member_id
+    @availabilities_by_date = availabilities.group_by { |availability| availability.starts_at.to_date }
+    @staff_members = StaffMember.order(:name)
+    monthly_availabilities = Availability
+      .where(starts_at: @current_month...@current_month.next_month)
+      .order(:starts_at)
+    monthly_availabilities = monthly_availabilities.where(staff_member_id: @staff_member_id) if @staff_member_id
+    @monthly_availabilities_by_staff = monthly_availabilities.group_by(&:staff_member_id)
   end
 
   def new
